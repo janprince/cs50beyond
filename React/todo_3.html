@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            TODO APP
+        </title>
+        <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        
+        <style>
+
+            #app{
+                margin: auto;
+                width: 50%;
+                padding: 10px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="app">
+
+        </div>
+
+        <script type="text/babel">
+
+            class App extends React.Component {
+
+                constructor(props) {
+                    super(props);
+                    this.state = {
+                        tasks: ["one thing", "another thing"],
+                        completedTasks: [],
+                        input: ""
+                    }
+                }
+
+                updateInput = (event) => {
+                    this.setState((state) => ({
+                        input: event.target.value
+                    }))
+                }
+
+                addTask = (event) => {
+                    const task = this.state.input;
+                    
+                        // hadling two events (pressing Enter on keyboard and clicking the add task button)
+                        if ((event.key == "Enter" || event.target.id == "addbtn") && task != "") {
+                            this.setState({
+                            tasks: [...this.state.tasks, task],
+                            input: ""
+                        })
+                    }
+                }
+
+                deleteTask = (index, tasksList) => {
+                    this.setState(state => {
+                        if (tasksList == "tasks"){
+                            const tasks = this.state.tasks;
+                            tasks.splice(index, 1);
+                            return {
+                                tasks: tasks,
+                            }
+                        } else if (tasksList == "completedTasks") {
+                            const completed_tasks = this.state.completedTasks;
+                            completed_tasks.splice(index, 1);
+                            return {
+                                completedTasks: completed_tasks,
+                            }
+                        }
+            
+                    })
+                }
+
+                completeTask = (index) => {
+                    this.setState(state => {
+                        const tasks = this.state.tasks;
+                        let completed_task = tasks[index];
+                        tasks.splice(index, 1);
+                        return {
+                            tasks: tasks,
+                            completedTasks: [...this.state.completedTasks, completed_task]
+                        } 
+                    });
+                }
+
+                render () {
+                    return (
+                        <div>
+                            <div>
+                                <h1>Tasks</h1>
+                                <ul>
+                                    {this.state.tasks.map((task, i) => 
+                                        <li key={i}>
+                                            <button onClick={() => this.deleteTask(i, "tasks")}>delete</button>
+                                            <button onClick={() => this.completeTask(i)}>done</button>
+                                            {task}
+                                        </li>
+                                    )}
+                                </ul>
+                                <h2> Number of tasks: {this.state.tasks.length} </h2>
+
+                                <div>
+                                    <input value={this.state.input} onChange={this.updateInput} onKeyPress={this.addTask} placeholder="Add Task" />
+                                    <button id="addbtn" onClick={this.addTask}>Add</button>
+                                </div>
+                            </div>
+
+                            <div className="ctasks">
+                                <h1>Completed Tasks</h1>
+                                <ul>
+                                    {this.state.completedTasks.map((task, i) => 
+                                        <li key={i}>
+                                            <button onClick={() => this.deleteTask(i, "completedTasks")}>delete</button>
+                                            {task}
+                                        </li>
+                                    )}
+                                </ul>
+                                
+                                
+                            </div>
+                        </div>
+                    );
+                }
+            }
+
+            const root = ReactDOM.createRoot(document.querySelector("#app"))
+            root.render(<App />);
+        </script>
+    </body>
+
+</html>

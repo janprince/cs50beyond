@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            TODO APP
+        </title>
+        <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        
+        <style>
+
+            #app{
+                margin: auto;
+                width: 50%;
+                padding: 10px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="app">
+
+        </div>
+
+        <script type="text/babel">
+            
+            class App extends React.Component {
+                constructor(props) {
+                    super(props);
+                    this.state = {
+                        tasks : [],
+                        input : ""
+                    }
+                }
+
+                updateInput = (event) => {
+                    this.setState(state => ({
+                        input: event.target.value
+                    }));
+                }
+
+                addTask = (event) => {
+                    const task = this.state.input;
+                    if (task != "") {
+                        this.setState({
+                            tasks: [...this.state.tasks, task],
+                            input: ""
+                        })
+                    }
+                }
+
+                deleteTask = (index) => {
+                     this.setState(state => {
+                         const tasks = [...this.state.tasks]
+                         tasks.splice(index, 1)
+                         return {
+                             tasks: tasks
+                         }   
+                     })
+                }
+
+                render() {
+                    return ( 
+                        <div>
+                            <div>
+                                <h1>Tasks</h1>
+                                <ul>
+                                    {this.state.tasks.map((task, i) => 
+                                        <li key={i}>
+                                        <button onClick={() => this.deleteTask(i)}>Delete</button>
+                                            {task}
+                                        </li>    
+                                    )}
+                                </ul>
+                                <h3>Number of tasks: {this.state.tasks.length} </h3>
+                            </div>
+
+                            <div>
+                                <input value={this.state.input} onChange={this.updateInput} />
+                                <button onClick={this.addTask}>Add Task</button>
+                                
+                            </div>
+                        </div>
+                    );
+                }
+            }
+
+            const root = ReactDOM.createRoot(document.querySelector("#app"));
+            root.render(<App />);
+        </script>
+    </body>
+
+</html>
